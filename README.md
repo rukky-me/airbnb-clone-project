@@ -148,3 +148,99 @@ Docker:
 CI/CD Pipelines (Continuous Integration/Continuous Deployment Pipelines): 
 Automated workflows and tools for testing and deploying code changes. These pipelines will automate the process of building the backend code, running automated tests (unit, integration, performance), and deploying the tested code to various environments (development, staging, production) quickly and reliably, ensuring a high quality and frequently updated application.
 
+
+5. Database Design
+
+Key Entities for Airbnb Clone Backend
+
+a. User (or Host/Guest)
+This entity represents both the users who can book properties (guests) and those who list properties (hosts). A single user can act as both.
+
+Important Fields:
+
+id (Primary Key, unique identifier)
+username (Unique, string)
+email (Unique, string, for login and notifications)
+password_hash (String, securely hashed password)
+first_name (String)
+last_name (String)
+
+Relationships:
+A User can create (own) multiple Properties.
+A User can make multiple Bookings.
+A User can write multiple Reviews.
+A User can have multiple Payments associated with their bookings/listings.
+
+b. Property
+This entity represents a single listing available for rent.
+
+Important Fields:
+id (Primary Key, unique identifier)
+host_id (Foreign Key to User.id, indicating the owner)
+title (String, e.g., "Cozy Apartment in Lekki")
+description (Text, detailed information about the property)
+address (String, street address)
+city (String, e.g., "Lagos")
+country (String, e.g., "Nigeria")
+price_per_night (Decimal/Float)
+number_of_guests (Integer, max capacity)
+number_of_bedrooms (Integer)
+number_of_bathrooms (Decimal/Float)
+amenities (Array of strings or a separate Amenities table, e.g., ['WiFi', 'Pool', 'AC'])
+
+Relationships:
+A Property is owned by one User (the host).
+A Property can have multiple Bookings.
+A Property can receive multiple Reviews.
+
+c. Booking
+This entity represents a reservation made by a guest for a specific property for a certain period.
+
+Important Fields:
+id (Primary Key, unique identifier)
+property_id (Foreign Key to Property.id)
+guest_id (Foreign Key to User.id, indicating who booked)
+check_in_date (Date)
+check_out_date (Date)
+total_price (Decimal/Float, calculated based on nights and price per night)
+number_of_guests (Integer, number of guests for this specific booking)
+status (String, e.g., 'pending', 'confirmed', 'cancelled', 'completed')
+created_at (Timestamp)
+
+Relationships:
+A Booking belongs to one Property.
+A Booking is made by one User (the guest).
+A Booking can be associated with one Payment.
+
+d. Review
+This entity stores feedback and ratings left by a guest for a property they have stayed in.
+
+Important Fields:
+id (Primary Key, unique identifier)
+property_id (Foreign Key to Property.id)
+guest_id (Foreign Key to User.id, who wrote the review)
+rating (Integer, e.g., 1-5 stars)
+comment (Text, the review text)
+created_at (Timestamp)
+
+Relationships:
+A Review is given for one Property.
+A Review is written by one User (the guest).
+
+e. Payment
+This entity records the details of a transaction related to a booking.
+
+Important Fields:
+id (Primary Key, unique identifier)
+booking_id (Foreign Key to Booking.id, optional if payments can exist outside bookings, but typical for Airbnb)
+user_id (Foreign Key to User.id, the user who made the payment)
+amount (Decimal/Float, the amount paid)
+currency (String, e.g., 'USD', 'NGN')
+transaction_id (String, from payment gateway)
+status (String, e.g., 'pending', 'succeeded', 'failed', 'refunded')
+payment_method (String, e.g., 'credit_card', 'bank_transfer')
+payment_date (Timestamp)
+
+Relationships:
+A Payment is typically linked to one Booking.
+A Payment is made by one User.
