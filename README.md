@@ -244,3 +244,76 @@ payment_date (Timestamp)
 Relationships:
 A Payment is typically linked to one Booking.
 A Payment is made by one User.
+
+Feature Breakdown
+
+User Management: This feature establishes a secure system for users to register, log in, and manage their profiles. It ensures that only authenticated users can access specific functionalities, providing a foundational layer of security and personalization for both guests and hosts.
+
+
+Property Management: This allows hosts to create, update, and retrieve listings for their properties, including details like descriptions, amenities, and pricing. It enables the core function of the platform by making properties available for users to discover and book.
+
+
+Booking System: This mechanism facilitates users reserving properties for specific dates, managing their booking details, and checking availability. It is crucial for enabling the core transaction of the platform, connecting guests with available accommodations.
+
+
+Payment Processing: This feature integrates a secure payment system to handle all financial transactions related to bookings, including collecting payments from guests and recording payment details. It ensures that financial operations are conducted safely and accurately, a vital component of any marketplace.
+
+
+Review System: This allows users to leave ratings and written reviews for properties they have stayed in. It builds trust and transparency within the platform by providing social proof and helping future guests make informed decisions about bookings.
+
+
+Data Optimization: This goal focuses on ensuring that data retrieval and storage are highly efficient through strategic database design, indexing, and query optimization. It is critical for the scalability and performance of the entire application, especially as the number of users and listings grows.
+
+
+API Security 
+
+API security is paramount for any web application, especially one dealing with sensitive user data, financial transactions, and property details. For your Airbnb clone, a multi-layered approach will be implemented.
+
+Key Security Measures
+Authentication:
+
+Explanation: This process verifies the identity of a user or client attempting to access the API. For this project, this will primarily be achieved using JSON Web Tokens (JWTs).
+Upon successful login (username/email and password verification), the backend generates a cryptographically signed JWT containing user identity information.
+This token is then sent back to the client. For subsequent requests to protected endpoints, the client includes this JWT in the Authorization header (e.g., Bearer <token>).
+The backend validates the token's signature, expiration, and claims on every request to ensure the user is who they claim to be and the token hasn't been tampered with.
+Why it's Crucial:
+User Management: Ensures that only legitimate users can access and modify their own profiles. Prevents unauthorized account access and identity theft.
+Property Management: Guarantees that only the property owner (authenticated host) can create, update, or delete their specific listings.
+Booking System: Confirms that a booking request is initiated by an authenticated user and not an impostor.
+Payment Processing: A fundamental step to ensure that payment operations are tied to a verified user account, preventing fraudulent transactions.
+Review System: Guarantees that reviews are posted by genuine, authenticated guests who have completed a booking, maintaining the integrity of feedback.
+Authorization:
+
+
+Explanation: Once a user is authenticated, authorization determines what that user is permitted to do. This will involve implementing Role-Based Access Control (RBAC) and Attribute-Based Access Control (ABAC) where applicable.
+RBAC: Users will be assigned roles (e.g., guest, host, admin). Permissions (e.g., can_create_property, can_view_all_bookings) will be associated with these roles. When an API request comes in, the system checks the user's role and grants/denies access based on the permissions tied to that role.
+ABAC: For finer-grained control, policies based on attributes (e.g., "A user can only update a property if they are the host_id of that property") will be enforced.
+Why it's Crucial:
+User Management: Ensures users can only update their own profiles, not others.
+Property Management: Prevents a guest from deleting a host's property, or one host from modifying another host's listing. Only the authenticated owner of a property is authorized to modify it.
+Booking System: Ensures a user can only view or cancel their own bookings, and a host can only manage bookings for their own properties.
+Payment Processing: Prevents one user from initiating payments on behalf of another or viewing another's payment history.
+Review System: Ensures that only guests who have stayed at a property can leave a review for it, and prevents users from deleting reviews they didn't write.
+Rate Limiting:
+
+
+Explanation: This measure restricts the number of API requests a user or IP address can make within a given time frame (e.g., 100 requests per minute). If the limit is exceeded, subsequent requests are temporarily blocked or throttled.
+
+
+Why it's Crucial:
+User Management: Protects against brute-force attacks on login endpoints and prevents spammers from rapidly creating multiple fake accounts.
+Property Management: Mitigates denial-of-service (DoS) attacks that could flood the system with excessive property search queries or listing creations, ensuring API availability for legitimate users.
+Booking System: Prevents malicious actors from attempting to exhaust property availability by rapidly sending booking requests.
+Payment Processing: Safeguards against attempts to repeatedly hit payment gateway integration endpoints, which could incur costs or trigger fraud alerts.
+Review System: Prevents spamming of reviews and maintains the quality and integrity of the review section.
+Additional Crucial Security Measures:
+Input Validation & Sanitization: All incoming data from API requests will be rigorously validated against expected formats, types, and constraints, and sanitized to remove any malicious code (e.g., preventing SQL injection by escaping inputs, guarding against XSS by sanitizing HTML).
+Why it's Crucial: Protects the database from malicious queries (SQL Injection) and the frontend from rendering harmful scripts (XSS), safeguarding all data and user interactions.
+Secure Password Storage: Passwords will never be stored in plain text. Instead, they will be hashed using a strong, one-way cryptographic hashing algorithm (like bcrypt or Argon2) with a salt.
+Why it's Crucial: Protects user accounts even if the database is breached, making it extremely difficult for attackers to reverse-engineer passwords.
+HTTPS (SSL/TLS): All API communication will be encrypted using HTTPS.
+Why it's Crucial: Prevents eavesdropping, man-in-the-middle attacks, and ensures the integrity of data exchanged between the client and the backend, especially vital for sensitive data like login credentials, payment details, and personal information.
+Logging and Monitoring: Comprehensive logging of API requests, authentication attempts, errors, and system events will be implemented, coupled with real-time monitoring and alerting.
+Why it's Crucial: Helps in detecting suspicious activities, identifying potential security breaches, and aiding in post-incident forensic analysis, which is important for protecting user data and system integrity across all features.
+Environment Variable Management: Sensitive credentials (e.g., database passwords, API keys for payment gateways, JWT secrets) will be stored securely using environment variables or a dedicated secrets management system, never hardcoded in the codebase.
+Why it's Crucial: Prevents sensitive information from being exposed in source code repositories, critical for protecting payment integrations, database access, and overall system security.
