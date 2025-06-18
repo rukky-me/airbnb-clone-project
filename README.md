@@ -111,3 +111,40 @@ Performance Testing: Works with DevOps to conduct load and stress testing on API
 Regression Testing: Ensures that new features or bug fixes don't introduce regressions (break existing functionality).
 
 Reporting: Documents and reports bugs clearly, collaborating with Backend Developers for resolution.
+
+4.  Technology Stack
+
+Django: 
+A high-level Python web framework used for rapidly building a robust and scalable RESTful API for the Airbnb clone. It provides an ORM (Object-Relational Mapper), admin interface, and a structured way to develop web applications.
+
+
+Django REST Framework (DRF): 
+A powerful and flexible toolkit built on top of Django, specifically designed for creating and managing RESTful APIs. It simplifies API development by providing serializers, views, routers, and authentication/permission classes, making it ideal for the various endpoints needed for user, property, and booking management.
+
+
+PostgreSQL: 
+A powerful, open-source, object-relational database system used for reliable and efficient data storage. Its robustness, ACID compliance (Atomicity, Consistency, Isolation, Durability), and advanced features make it an excellent choice for managing the complex and interconnected data required for user profiles, property listings, bookings, payments, and reviews.
+
+
+GraphQL: 
+A query language for your API, and a server-side runtime for executing queries by using a type system you define for your data. It allows clients (like your frontend or mobile apps) to request exactly the data they need and nothing more, reducing over-fetching and under-fetching, and providing a more flexible and efficient way to interact with your backend data compared to traditional REST.
+
+Celery: 
+A distributed task queue system used for handling asynchronous tasks. In the Airbnb clone, this would be crucial for operations that shouldn't block the main request-response cycle, such as sending email notifications (e.g., booking confirmations, payment receipts), processing payment webhooks in the background, generating reports, or other time-consuming operations.
+
+
+Redis:
+ An in-memory data structure store used primarily for caching and session management.
+
+
+Caching: Speeds up data retrieval by storing frequently accessed data (e.g., popular property listings, user session data) in memory, reducing the need to hit the primary PostgreSQL database for every request.
+Session Management: Can be used to store user session data, providing a fast and scalable way to manage authenticated user states across multiple backend instances.
+Celery Broker: Redis can also serve as a message broker for Celery, facilitating communication between your Django application and Celery worker processes.
+
+Docker:
+ A containerization platform used for packaging the Airbnb clone's backend application and all its dependencies into isolated, portable containers. This ensures consistent development, testing, and production environments, eliminating "it works on my machine" issues and simplifying deployment.
+
+
+CI/CD Pipelines (Continuous Integration/Continuous Deployment Pipelines): 
+Automated workflows and tools for testing and deploying code changes. These pipelines will automate the process of building the backend code, running automated tests (unit, integration, performance), and deploying the tested code to various environments (development, staging, production) quickly and reliably, ensuring a high quality and frequently updated application.
+
